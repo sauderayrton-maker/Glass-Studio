@@ -10,7 +10,6 @@ function setup() {
 }
 
 function draw() {
-  background(220);
   fill(0);
   square(width / 2, height, height / 4, 20);
 }
