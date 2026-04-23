@@ -12,11 +12,18 @@ let rows;
 let cols;
 let noteW;
 let noteH;
+let size;
+let notesArray = [];
+const ACTIVE_NOTE = 1;
+const INACTIVE_NOTE = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  rows = height - height / 4 / size;
-  cols = width - width / 4 / size;
+  noteW = width / 32;
+  noteH = 16;
+  rows = height / noteH;
+  cols = width / noteW;
+  makeGrid(cols, rows);
 }
 
 function draw() {
@@ -27,9 +34,35 @@ function draw() {
 function drawPianoRoll() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      fill(COLOR5);
-      noStroke();
-      square(x * size, y * size, size, CORNERRADIUS);
+      if (notesArray[y][x] === ACTIVE_NOTE) {
+        fill(COLOR7);
+      } else {
+        fill(COLOR5);
+      }
+      stroke(COLOR1);
+      square(x * noteW, y * noteH, noteW, CORNERRADIUS);
     }
   }
+}
+function makeGrid(cols, rows) {
+  for (let y = 0; y < rows; y++) {
+    notesArray[y] = [];
+    for (let x = 0; x < cols; x++) {
+      notesArray[y][x] = INACTIVE_NOTE;
+    }
+  }
+}
+
+function toggleNote(x, y) {
+  if (notesArray[y][x] === ACTIVE_NOTE) {
+    notesArray[y][x] = INACTIVE_NOTE;
+  } else {
+    notesArray[y][x] = ACTIVE_NOTE;
+  }
+}
+
+function mouseClicked() {
+  let x = floor(mouseX / noteW);
+  let y = floor(mouseY / noteH);
+  toggleNote(x, y);
 }
