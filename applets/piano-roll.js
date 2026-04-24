@@ -14,8 +14,11 @@ let noteW;
 let noteH;
 let size;
 let notesArray = [];
+let noteSelector = ACTIVE_NOTE;
 const ACTIVE_NOTE = 1;
 const INACTIVE_NOTE = 0;
+const HALF_NOTE = 2;
+const HOLE_NOTE = 4;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -71,6 +74,15 @@ function mouseClicked() {
 function keyPressed() {
   if (key === "s") {
     saveGrid();
+  }
+  if (key === "1") {
+    noteSelector = ACTIVE_NOTE;
+  }
+  if (key === "2") {
+    noteSelector = HALF_NOTE;
+  }
+  if (key === "4") {
+    noteSelector = HOLE_NOTE;
   }
 }
 
