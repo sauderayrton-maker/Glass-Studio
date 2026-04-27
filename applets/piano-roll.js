@@ -1,24 +1,27 @@
 const CORNERRADIUS = 20;
-const COLOR1 = "#582f0e";
-const COLOR2 = "#7f4f24";
-const COLOR3 = "#936639";
-const COLOR4 = "#a68a64";
-const COLOR5 = "#b6ad90";
-const COLOR6 = "#c2c5aa";
-const COLOR7 = "#656d4a";
-const COLOR8 = "#414833";
-const COLOR9 = "#333d29";
+const GRID_STROKE = "#181824";
+const SURFACE = "#111118";
+const CELL_BG = "#1a1a2e";
+const PLAYHEAD_COLOR = "#2d3561";
+const INACTIVE_NOTE_COLOR = "#23243a";
+const ACTIVE_NOTE_COLOR = "#c8ccff";
+const ACTIVE_NOTE_BRIGHT = "#e8eaff";
+const BG = "#0a0a0f";
+const ACTIVE_NOTE = 1;
+const INACTIVE_NOTE = 0;
+const HALF_NOTE = 2;
+const HOLE_NOTE = 4;
+
 let rows;
 let cols;
 let noteW;
 let noteH;
 let size;
 let notesArray = [];
+let playing = false;
 let noteSelector = ACTIVE_NOTE;
-const ACTIVE_NOTE = 1;
-const INACTIVE_NOTE = 0;
-const HALF_NOTE = 2;
-const HOLE_NOTE = 4;
+let bpm = 120;
+let currentNote = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -31,23 +34,31 @@ function setup() {
 }
 
 function draw() {
-  background(COLOR9);
+  background(BG);
   drawPianoRoll();
+  if (playing) {
+    play();
+  }
+}
+
+function play() {
+  console.log("ts playing now");
 }
 
 function drawPianoRoll() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (notesArray[y][x] === ACTIVE_NOTE) {
-        fill(COLOR7);
+        fill(ACTIVE_NOTE_COLOR);
       } else {
-        fill(COLOR5);
+        fill(INACTIVE_NOTE_COLOR);
       }
-      stroke(COLOR1);
-      square(x * noteW, y * noteH, size, CORNERRADIUS);
+      stroke(GRID_STROKE);
+      rect(x * noteW, y * noteH, noteW, noteH, CORNERRADIUS);
     }
   }
 }
+
 function makeGrid(cols, rows) {
   for (let y = 0; y < rows; y++) {
     notesArray[y] = [];
@@ -72,8 +83,14 @@ function mouseClicked() {
 }
 
 function keyPressed() {
-  if (key === "s") {
+  if (key === "s" || key === "S") {
     saveGrid();
+  }
+  if (key === "l" || key === "L") {
+    loadGrid();
+  }
+  if (key === " ") {
+    playing = !playing;
   }
   if (key === "1") {
     noteSelector = ACTIVE_NOTE;
@@ -86,4 +103,13 @@ function keyPressed() {
   }
 }
 
-function saveGrid() {}
+function saveGrid() {
+  localStorage.setItem("pianoRoll", JSON.stringify(notesArray));
+}
+
+function loadGrid() {
+  let saved = localStorage.getItem("pianoRoll");
+  if (saved) {
+    notesArray = JSON.parse(saved);
+  }
+}
