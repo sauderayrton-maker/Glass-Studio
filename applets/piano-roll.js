@@ -1,3 +1,4 @@
+//----- Constants -----//
 const CORNERRADIUS = 20;
 const GRID_STROKE = "#181824";
 const SURFACE = "#111118";
@@ -12,6 +13,7 @@ const INACTIVE_NOTE = 0;
 const HALF_NOTE = 2;
 const HOLE_NOTE = 4;
 
+//----- Variables -----//
 let rows;
 let cols;
 let noteW;
@@ -23,6 +25,7 @@ let noteSelector = ACTIVE_NOTE;
 let bpm = 120;
 let currentNote = 0;
 
+//----- Setup -----//
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noteW = width / 16;
@@ -33,6 +36,7 @@ function setup() {
   makeGrid(cols, rows);
 }
 
+//----- Making it happen -----//
 function draw() {
   background(BG);
   drawPianoRoll();
@@ -41,10 +45,12 @@ function draw() {
   }
 }
 
+//----- Timing -----//
 function play() {
   console.log("ts playing now");
 }
 
+//----- Draws the Grid and Fills Colors -----//
 function drawPianoRoll() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
@@ -59,6 +65,7 @@ function drawPianoRoll() {
   }
 }
 
+//----- Creats Grid Array-----//
 function makeGrid(cols, rows) {
   for (let y = 0; y < rows; y++) {
     notesArray[y] = [];
@@ -68,6 +75,7 @@ function makeGrid(cols, rows) {
   }
 }
 
+//----- Updates Grid when Clicked -----//
 function toggleNote(x, y) {
   if (notesArray[y][x] === ACTIVE_NOTE) {
     notesArray[y][x] = INACTIVE_NOTE;
@@ -76,6 +84,7 @@ function toggleNote(x, y) {
   }
 }
 
+//----- Keybinds -----//
 function mouseClicked() {
   let x = floor(mouseX / noteW);
   let y = floor(mouseY / noteH);
@@ -106,10 +115,12 @@ function keyPressed() {
   }
 }
 
+//----- Saves grid to local storage -----//
 function saveGrid() {
   localStorage.setItem("pianoRoll", JSON.stringify(notesArray));
 }
 
+//----- Loads grid to use again -----//
 function loadGrid() {
   let saved = localStorage.getItem("pianoRoll");
   if (saved) {
