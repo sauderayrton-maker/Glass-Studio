@@ -4,12 +4,12 @@ const GRID_STROKE = "#181824";
 const SURFACE = "#111118";
 const CELL_BG = "#1a1a2e";
 const PLAYHEAD_COLOR = "#2d3561";
-const INACTIVE_NOTE_COLOR = "#23243a";
+const INACTIVE_DRUM_COLOR = "#23243a";
 const ACTIVE_NOTE_COLOR = "#c8ccff";
 const ACTIVE_NOTE_BRIGHT = "#e8eaff";
 const BG = "#0a0a0f";
 const ACTIVE_NOTE = 1;
-const INACTIVE_NOTE = 0;
+const INACTIVE_DRUM = 0;
 const HALF_NOTE = 2;
 const HOLE_NOTE = 4;
 
@@ -19,7 +19,7 @@ let cols;
 let noteW;
 let noteH;
 let size;
-let notesArray = [];
+let beatsArray = [];
 let playing = false;
 let noteSelector = ACTIVE_NOTE;
 let bpm = 120;
@@ -28,7 +28,7 @@ let currentNote = 0;
 //----- Setup -----//
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  noteW = width / 16;
+  noteW = width / 8;
   noteH = height / 8;
   size = (width / height) * 50;
   rows = height / noteH;
@@ -39,7 +39,7 @@ function setup() {
 //----- Making it happen -----//
 function draw() {
   background(BG);
-  drawPianoRoll();
+  drawDrumPad();
   if (playing) {
     play();
   }
@@ -51,13 +51,13 @@ function play() {
 }
 
 //----- Draws the Grid and Fills Colors -----//
-function drawPianoRoll() {
+function drawDrumPad() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      if (notesArray[y][x] === ACTIVE_NOTE) {
+      if (beatsArray[y][x] === ACTIVE_NOTE) {
         fill(ACTIVE_NOTE_COLOR);
       } else {
-        fill(INACTIVE_NOTE_COLOR);
+        fill(INACTIVE_DRUM_COLOR);
       }
       stroke(GRID_STROKE);
       rect(x * noteW, y * noteH, noteW, noteH, CORNERRADIUS);
@@ -68,19 +68,19 @@ function drawPianoRoll() {
 //----- Creats Grid Array-----//
 function makeGrid(cols, rows) {
   for (let y = 0; y < rows; y++) {
-    notesArray[y] = [];
+    beatsArray[y] = [];
     for (let x = 0; x < cols; x++) {
-      notesArray[y][x] = INACTIVE_NOTE;
+      beatsArray[y][x] = INACTIVE_DRUM;
     }
   }
 }
 
 //----- Updates Grid when Clicked -----//
 function toggleNote(x, y) {
-  if (notesArray[y][x] === ACTIVE_NOTE) {
-    notesArray[y][x] = INACTIVE_NOTE;
+  if (beatsArray[y][x] === ACTIVE_NOTE) {
+    beatsArray[y][x] = INACTIVE_DRUM;
   } else {
-    notesArray[y][x] = ACTIVE_NOTE;
+    beatsArray[y][x] = ACTIVE_NOTE;
   }
 }
 
@@ -105,30 +105,19 @@ function keyPressed() {
   if (key === "c" || key === "C") {
     makeGrid(cols, rows);
   }
-  if (key === "1") {
-    noteSelector = ACTIVE_NOTE;
-  }
-  if (key === "2") {
-    noteSelector = HALF_NOTE;
-  }
-  if (key === "4") {
-    noteSelector = HOLE_NOTE;
-  }
 }
 
 //----- Saves grid to local storage -----//
 function saveGrid() {
-  localStorage.setItem("pianoRoll", JSON.stringify(notesArray));
+  localStorage.setItem("drumPad", JSON.stringify(beatsArray));
 }
 
 //----- Loads grid to use again -----//
 function loadGrid() {
-  let saved = localStorage.getItem("pianoRoll");
+  let saved = localStorage.getItem("drumPad");
   if (saved) {
-    notesArray = JSON.parse(saved);
+    beatsArray = JSON.parse(saved);
   }
 }
 
 function keepTime() {}
-
-// got side tracked on demo thingy
